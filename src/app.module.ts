@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { AppController } from './health/controllers/app.controller';
-import { AppService } from './health/services/app.service';
-import { IntegrationsModule } from './integrations/integrations.module';
+import { IntegrationsModule } from '@integrations/integrations.module';
+import { AppController } from '@health/controllers/app.controller';
+import { AppService } from '@health/services/app.service';
+
 import { dataSourceOptions, dataSourceFactory } from './config/database.config';
 import { CommonModule } from './common/common.module';
 

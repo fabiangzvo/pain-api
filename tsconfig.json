@@ -16,6 +16,20 @@
     "forceConsistentCasingInFileNames": true,
     "noImplicitAny": false,
     "strictBindCallApply": false,
-    "noFallthroughCasesInSwitch": false
+    "noFallthroughCasesInSwitch": false,
+    "paths": {
+      "@/*": [
+        "src/*"
+      ],
+      "@integrations/*": [
+        "src/integrations/*"
+      ],
+      "@health/*": [
+        "src/health/*"
+      ],
+      "@common/*": [
+        "src/common/*"
+      ],
+    }
   }
 }

@@ -1,7 +1,8 @@
 import { randomUUID } from 'node:crypto';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
-import { ObjectLiteral } from 'typeorm';
+import { FindOptionsWhere, Like, ObjectLiteral } from 'typeorm';
+import { FindManyOptions } from 'typeorm';
 
 import { StatusRepository } from '@common/repositories/status.repository';
 import { UserRepository } from '@common/repositories/user.repository';
@@ -10,6 +11,7 @@ import { ProviderRepository } from '@common/repositories/provider.repository';
 import { IntegrationsRepository } from '../repositories/integration.repository';
 import { CreateIntegrationDto } from '../dto/create-integration.dto';
 import { Integration } from '../entities/integration.entity';
+import { PaginationQueryDto } from '../dto/filter-integration.dto';
 
 @Injectable()
 export class IntegrationsService {
@@ -60,5 +62,23 @@ export class IntegrationsService {
     const integration = await this.integrationRepository.create(record);
 
     return integration;
+  }
+
+  find(filters: PaginationQueryDto): Promise<Integration[]> {
+    const options: FindManyOptions<Integration> = {
+      take: filters.limit,
+      skip: (filters.page - 1) * filters.limit,
+      order: {
+        createdAt: filters.sort || 'desc',
+      },
+    };
+
+    const conditions: FindOptionsWhere<Integration> = {};
+
+    if (filters.search) conditions.name = Like(`%${filters.search}%`);
+
+    if (Object.keys(conditions).length > 0) options.where = conditions;
+
+    return this.integrationRepository.find(options);
   }
 }

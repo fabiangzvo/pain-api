@@ -1,4 +1,4 @@
-import { EntityManager, ObjectLiteral } from 'typeorm';
+import { EntityManager, ObjectLiteral, FindManyOptions } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 
@@ -16,5 +16,9 @@ export class IntegrationsRepository {
       .insert(record);
 
     return result.identifiers[0];
+  }
+
+  find(filters?: FindManyOptions<Integration>): Promise<Integration[]> {
+    return this.instance.getRepository(Integration).find(filters);
   }
 }

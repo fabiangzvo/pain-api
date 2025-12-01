@@ -1,4 +1,5 @@
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
+import { join } from 'node:path';
 import { DataSource, DataSourceOptions } from 'typeorm';
 
 export const dataSourceOptions: TypeOrmModuleOptions = {
@@ -8,7 +9,7 @@ export const dataSourceOptions: TypeOrmModuleOptions = {
   username: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
-  entities: [__dirname + '/**/*.entity.{ts,js}'],
+  entities: [join(__dirname, '../**/*.entity.{ts,js}')],
   synchronize: false,
   ssl: true,
 };

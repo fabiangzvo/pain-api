@@ -66,13 +66,13 @@ export class IntegrationsService {
   }
 
   async find(
-    filters: PaginationQueryDto,
+    query: PaginationQueryDto<Integration>,
   ): Promise<PaginatedResponseDto<Integration>> {
     const options: FindManyOptions<Integration> = {
-      take: filters.limit,
-      skip: (filters.page - 1) * filters.limit,
+      take: query.limit,
+      skip: (query.page - 1) * query.limit,
       order: {
-        createdAt: filters.sort || 'desc',
+        createdAt: query.sort || 'desc',
       },
       relations: {
         provider: true,
@@ -82,7 +82,9 @@ export class IntegrationsService {
 
     const conditions: FindOptionsWhere<Integration> = {};
 
-    if (filters.search) conditions.name = Like(`%${filters.search}%`);
+    if (query.search) conditions.name = Like(`%${query.search}%`);
+
+    if (query?.filters) Object.assign(conditions, query.filters);
 
     if (Object.keys(conditions).length > 0) options.where = conditions;
 
@@ -90,5 +92,11 @@ export class IntegrationsService {
       await this.integrationRepository.findAndCount(options);
 
     return { data, count };
+  }
+
+  async softRemove(id: string): Promise<void> {
+    const result = await this.integrationRepository.softRemove(id);
+
+    if (!result) throw new NotFoundException(`Integration ${id} not found`);
   }
 }

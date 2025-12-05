@@ -6,6 +6,7 @@ import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { Logger } from '@nestjs/common';
 import { ValidationPipe } from '@nestjs/common';
+import { ParseFiltersPipe } from '@/common/pipes/parse-filters.pipe';
 
 import { ExceptionsFilter } from '@common/filters/exceptions/exceptions.filter';
 
@@ -21,6 +22,7 @@ async function bootstrap() {
   });
 
   app.useGlobalPipes(
+    new ParseFiltersPipe(),
     new ValidationPipe({
       forbidNonWhitelisted: true,
       transform: true,

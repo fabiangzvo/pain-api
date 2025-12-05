@@ -1,4 +1,12 @@
-import { Controller, Post, Body, Get, Query } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  Get,
+  Query,
+  Delete,
+  Param,
+} from '@nestjs/common';
 import { ObjectLiteral } from 'typeorm';
 
 import { PaginatedResponseDto } from '@common/dto/paginatedResponse.dto';
@@ -21,8 +29,13 @@ export class IntegrationsController {
 
   @Get()
   find(
-    @Query() query: PaginationQueryDto,
+    @Query() query: PaginationQueryDto<Integration>,
   ): Promise<PaginatedResponseDto<Integration>> {
     return this.integrationsService.find(query);
+  }
+
+  @Delete(':id')
+  delete(@Param('id') id: string): Promise<void> {
+    return this.integrationsService.softRemove(id);
   }
 }

@@ -23,4 +23,12 @@ export class IntegrationsRepository {
   ): Promise<[Integration[], number]> {
     return this.instance.getRepository(Integration).findAndCount(filters);
   }
+
+  async softRemove(id: string): Promise<boolean> {
+    const { affected } = await this.instance
+      .getRepository(Integration)
+      .update({ id }, { softRemoved: true });
+
+    return !!affected;
+  }
 }
